@@ -1,25 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root{
-  /* Core palette (professional B/W) */
-  --bg: #f8fafc;             /* near-white */
-  --surface: #99e8ff;        /* pure white cards */
-  --ink: #0b1220;            /* near-black */
-  --muted: #475569;          /* slate */
-  --muted-2: #64748b;        /* lighter slate */
-  --line: #e5e7eb;           /* borders */
-  --line-2: #eef2f7;         /* soft borders */
+  /* Core palette */
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --muted-2: #64748b;
+  --line: #e2e8f0;
+  --line-2: #eef2f7;
 
-  /* Brand (use sparingly) */
-  --brand: #1e3a8a;          /* deep blue */
-  --brand-2: #2563eb;        /* accent blue */
-  --brand-soft: #eff6ff;     /* light blue background */
+  /* Brand */
+  --brand: #1e3a8a;
+  --brand-2: #2563eb;
+  --brand-soft: #eff6ff;
 
   /* Layout */
   --radius: 12px;
   --radius-lg: 16px;
-  --shadow: 0 10px 25px rgba(2, 6, 23, 0.06);
-  --shadow-2: 0 6px 16px rgba(2, 6, 23, 0.05);
+  --shadow: 0 4px 24px rgba(15, 23, 42, 0.07);
+  --shadow-2: 0 2px 12px rgba(15, 23, 42, 0.05);
 
   /* Typography */
   --text: 15px;
@@ -78,8 +78,8 @@ header .title-block p{
   margin-top: 2px;
 }
 
-/* Navigation */
-nav{
+/* Navigation (custom standalone nav, not Bootstrap navbar) */
+nav.custom-nav{
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -89,7 +89,7 @@ nav{
   box-shadow: var(--shadow-2);
 }
 
-nav a{
+nav.custom-nav a{
   text-decoration:none;
   display:inline-block;
   margin: 4px 4px;
@@ -100,13 +100,39 @@ nav a{
   transition: background .15s ease, color .15s ease, transform .08s ease;
 }
 
-nav a:hover{
+nav.custom-nav a:hover{
   background: #f1f5f9;
   color: var(--ink);
   transform: translateY(-1px);
 }
 
-nav a.active{
+nav.custom-nav a.active{
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+/* Bootstrap navbar overrides */
+.navbar{
+  background: var(--surface) !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+
+.navbar .navbar-brand{
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.navbar .nav-link{
+  color: var(--muted);
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: background .15s ease, color .15s ease;
+}
+
+.navbar .nav-link:hover{
   background: var(--brand-soft);
   color: var(--brand);
 }
@@ -169,20 +195,20 @@ h3{ font-size: 16px; font-weight: 650; }
 a{ color: var(--brand-2); }
 a:hover{ color: var(--brand); }
 
-/* Lists */
-ul{
+/* Lists (scoped to content area only, not navbar) */
+main ul:not(.navbar-nav):not(.list-group){
   list-style:none;
   padding-left: 0;
 }
 
-ul li{
+main ul:not(.navbar-nav):not(.list-group) li{
   margin: 9px 0;
   padding-left: 22px;
   position: relative;
   color: var(--muted);
 }
 
-ul li::before{
+main ul:not(.navbar-nav):not(.list-group) li::before{
   content:"";
   width: 8px;
   height: 8px;
@@ -355,4 +381,43 @@ footer .footer-right a:hover{
   header .title-block h1{ font-size: 20px; }
   nav{ overflow-x:auto; white-space:nowrap; }
   .section{ padding: 20px 18px; }
+}
+
+/* Profile components */
+.profile-avatar{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--brand-2);
+}
+
+.profile-avatar-placeholder{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Glass card effect */
+.card-glass{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.list-group-item{
+  border-color: var(--line);
+}
+
+.list-group-item:hover{
+  background: var(--brand-soft);
 }

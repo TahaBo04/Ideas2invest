@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Modifier mon profil · ideas2invest{% endblock %}
+{% block header_title %}Modifier mon profil{% endblock %}
+{% block header_subtitle %}Personnalisez votre profil public.{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card card-glass p-4">
+      <form method="post" enctype="multipart/form-data">
+        <div class="text-center mb-4">
+          {% if current_user.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' + current_user.profile_picture) }}"
+                 alt="Photo de profil" class="profile-avatar mb-2">
+          {% else %}
+            <div class="profile-avatar-placeholder mx-auto mb-2">
+              {{ current_user.first_name[0] }}{{ current_user.last_name[0] }}
+            </div>
+          {% endif %}
+          <div>
+            <label class="form-label">Photo de profil</label>
+            <input type="file" class="form-control" name="profile_picture" accept="image/*">
+            <div class="form-text">Formats acceptés : PNG, JPG, GIF, WebP.</div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-control" name="first_name"
+                   value="{{ current_user.first_name }}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control" name="last_name"
+                   value="{{ current_user.last_name }}" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Parcours scolaire &amp; description</label>
+            <textarea class="form-control" name="bio" rows="5"
+                      placeholder="Décrivez votre parcours académique, vos compétences et vos centres d'intérêt…">{{ current_user.bio or "" }}</textarea>
+            <div class="form-text">
+              Cette description sera visible sur votre profil public.
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('profile.public_profile', user_id=current_user.id) }}"
+             class="btn btn-outline-secondary">Annuler</a>
+          <button class="btn btn-info px-4" type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

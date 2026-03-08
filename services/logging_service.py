@@ -1,7 +1,7 @@
 # services/logging_service.py
 from datetime import datetime
 from flask import request
-from app import db
+from extensions import db
 
 from models.logs import UserLoginLog, IdeaViewLog
 
@@ -19,18 +19,19 @@ def log_login(user, success: bool, failure_reason: str | None = None):
     db.session.commit()
 
 
-def log_idea_view(user, idea, action: str = "view", extra: str | None = None):
+def log_idea_view(idea_id: int, viewed_layer: str, viewer_id: int | None = None):
     """
     Logs an investor/innovator view/action on an idea.
-    action examples: "view", "open_confidential", "download", "request_nda"
+    viewed_layer examples: "public", "confidential"
     """
+    if viewer_id is None:
+        return
     log = IdeaViewLog(
-        user_id=user.id,          # ✅ use IDs
-        idea_id=idea.id,
-        action=action,
+        user_id=viewer_id,
+        idea_id=idea_id,
+        action=viewed_layer,
         ip_address=request.remote_addr,
         user_agent=request.headers.get("User-Agent"),
-        extra=extra,
         created_at=datetime.utcnow(),
     )
     db.session.add(log)

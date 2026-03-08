@@ -1,6 +1,6 @@
 # models/logs.py
 from datetime import datetime
-from app import db
+from extensions import db
 
 
 class UserLoginLog(db.Model):

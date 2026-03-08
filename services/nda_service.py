@@ -1,6 +1,6 @@
 # services/nda_service.py
 from flask import request
-from app import db
+from extensions import db
 from models.nda import NDAAgreement
 
 def has_signed_nda(user_id: int, idea_id: int) -> bool:

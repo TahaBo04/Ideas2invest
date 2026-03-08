@@ -8,7 +8,7 @@ Here we manage:
 - Simple local validation of ID formats
 """
 
-from app import db
+from extensions import db
 from models.user import User
 
 

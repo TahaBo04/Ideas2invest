@@ -54,6 +54,9 @@
             </li>
           {% endif %}
           <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('profile.public_profile', user_id=current_user.id) }}">Mon profil</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{ url_for('auth.logout') }}">Déconnexion</a>
           </li>
         {% else %}
