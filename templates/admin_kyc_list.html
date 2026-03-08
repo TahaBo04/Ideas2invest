@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Admin · KYC{% endblock %}
+{% block header_title %}Administration KYC{% endblock %}
+{% block header_subtitle %}Validez ou rejetez les comptes en attente de vérification.{% endblock %}
+
+{% block content %}
+<div class="card card-glass p-4">
+  <h2 class="h5 text-info mb-3">Utilisateurs en attente</h2>
+  {% if users %}
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Type ID</th>
+            <th>Numéro ID</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr>
+              <td>{{ u.id }}</td>
+              <td>{{ u.first_name }} {{ u.last_name }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.role }}</td>
+              <td>{{ u.id_type }}</td>
+              <td>{{ u.id_number }}</td>
+              <td>
+                <form method="post" action="{{ url_for('admin.kyc_validate', user_id=u.id) }}" class="d-flex gap-2">
+                  <input type="hidden" name="notes" value="">
+                  <button name="status" value="verified" class="btn btn-success btn-sm">Valider</button>
+                  <button name="status" value="rejected" class="btn btn-danger btn-sm">Rejeter</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-secondary">Aucun utilisateur en attente.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ idea.title }} · ideas2invest{% endblock %}
+
+{% block content %}
+<div class="section">
+  <h2>{{ idea.title }}</h2>
+  <div class="idea-meta">
+    <span class="idea-tag">{{ idea.sector or "Innovation" }}</span>
+    <span class="idea-tag">{{ idea.stage or "Stage" }}</span>
+    <span class="idea-tag">{{ idea.country or "Pays" }}</span>
+  </div>
+
+  <p class="teaser">{{ idea.teaser }}</p>
+
+  <div class="nda-box">
+    <strong>🔒 Protection:</strong> Le pitch complet est disponible uniquement après
+    signature d’un NDA (investisseurs vérifiés). Chaque accès est tracé.
+  </div>
+
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+    <a class="button secondary" href="{{ url_for('ideas.list_ideas') }}">Retour</a>
+
+    {% if current_user.is_authenticated and current_user.role == "investor" %}
+      <a class="button" href="{{ url_for('ideas.idea_nda_confirm', idea_id=idea.id) }}">
+        Accéder (NDA)
+      </a>
+    {% else %}
+      <a class="button" href="{{ url_for('auth.login') }}">Connexion investisseur</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

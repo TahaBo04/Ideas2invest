@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ideas2invest{% endblock %}</title>
+
+    <!-- Bootstrap 5 (layout only, no color forcing) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    >
+
+    <!-- Main custom CSS (controls ALL colors) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg px-3 py-3">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
+      ideas<span style="color:#2563eb;">2</span>invest
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('ideas.list_ideas') }}">Parcourir les idées</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('posts.feed') }}">Actualités</a></li>
+
+
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == 'innovator' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('ideas.list_ideas') }}">Mes idées</a>
+            </li>
+          {% elif current_user.role == 'investor' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('investor.dashboard') }}">Espace investisseur</a>
+            </li>
+          {% elif current_user.role == 'admin' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.kyc_list') }}">Admin KYC</a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.logout') }}">Déconnexion</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.login') }}">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.register') }}">Inscription</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO / HEADER -->
+<header class="section text-center">
+  <div class="page">
+    <h1>
+      {% block header_title %}
+        La passerelle sécurisée entre idées et investisseurs
+      {% endblock %}
+    </h1>
+    <p class="mt-2">
+      {% block header_subtitle %}
+        Protégez vos idées. Accédez à des investisseurs vérifiés. Construisons la confiance dans l’innovation.
+      {% endblock %}
+    </p>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="page mt-4 mb-5">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-4">
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    © {{ 2025 }} ideas2invest — Sécurité, Confidentialité, Innovation.
+  </div>
+
+  <div class="footer-right">
+    <a href="mailto:idea2invest.pro@gmail.com">Email</a>
+    ·
+    <a href="https://www.linkedin.com/in/ideas-2-invest-526166395/">LinkedIn</a>
+    ·
+    <a href="https://www.instagram.com/ideas2invest.pro/"
+       target="_blank"
+       rel="noopener noreferrer">
+      Instagram
+    </a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

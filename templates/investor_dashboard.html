@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Espace investisseur{% endblock %}
+{% block header_title %}Espace investisseur{% endblock %}
+{% block header_subtitle %}Suivez vos NDA, vos idées consultées et votre réputation.{% endblock %}
+
+{% block content %}
+<div class="card card-glass p-4">
+  <h2 class="h5 text-info mb-3">Bienvenue, {{ current_user.first_name }}.</h2>
+  <p class="text-secondary small">
+    Ici, vous pourrez suivre vos accès confidentiels, votre historique de consultation, et à terme votre score d’investisseur.
+  </p>
+  <p class="text-secondary">
+    (À implémenter : liste des NDA acceptés, idées consultées, propositions envoyées, etc.)
+  </p>
+</div>
+{% endblock %}

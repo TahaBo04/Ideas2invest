@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Confidentiel · {{ idea.title }}{% endblock %}
+
+{% block content %}
+<div class="section">
+  <h2>Contenu confidentiel — {{ idea.title }}</h2>
+
+  <div class="nda-box">
+    <strong>⚠️ Accès confidentiel:</strong> Votre consultation est horodatée et enregistrée.
+    Toute utilisation non autorisée constitue une violation du NDA.
+  </div>
+
+  {% if idea.nda_preview %}
+    <h3 style="margin-top:16px;">Résumé (après NDA)</h3>
+    <p class="teaser">{{ idea.nda_preview }}</p>
+  {% endif %}
+
+  <h3 style="margin-top:16px;">Pitch complet</h3>
+  <p class="teaser">{{ idea.confidential_pitch or "Le porteur d’idée n’a pas encore ajouté le pitch complet." }}</p>
+
+  <div style="margin-top:14px;">
+    <a class="button secondary" href="{{ url_for('ideas.idea_public', idea_id=idea.id) }}">Retour</a>
+  </div>
+</div>
+{% endblock %}

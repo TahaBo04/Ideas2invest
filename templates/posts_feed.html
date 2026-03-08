@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Fil d’actualité · ideas2invest{% endblock %}
+
+{% block content %}
+<div class="section">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <div>
+      <h2>Fil d’actualité</h2>
+      <p>Posts des investisseurs et porteurs d’idées.</p>
+    </div>
+
+    {% if current_user.is_authenticated and current_user.role in ["investor", "innovator"] %}
+      <a class="button" href="{{ url_for('posts.new_post') }}">Nouveau post</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="section">
+  {% if posts %}
+    <div class="ideas-grid">
+      {% for p in posts %}
+        <div class="idea-card">
+          <div class="idea-meta">
+            <span class="idea-tag">{{ p.author_role }}</span>
+            · {{ p.created_at.strftime("%d/%m/%Y %H:%M") }}
+            · <span class="idea-tag">{{ p.visibility }}</span>
+          </div>
+
+          <h3>{{ p.title }}</h3>
+          <p class="teaser">{{ p.content }}</p>
+
+          <div class="idea-meta">Auteur: {{ p.author.first_name }} {{ p.author.last_name }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Aucun post pour le moment.</p>
+  {% endif %}
+</div>
+{% endblock %}

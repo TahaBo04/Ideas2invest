@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Connexion · ideas2invest{% endblock %}
+{% block header_title %}Connexion{% endblock %}
+{% block header_subtitle %}Accédez à votre espace sécurisé.{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card card-glass p-4">
+      <form method="post">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" class="form-control" name="password" required>
+        </div>
+        <button class="btn btn-info w-100 mt-2" type="submit">Se connecter</button>
+      </form>
+      <p class="mt-3 mb-0 text-center text-secondary">
+        Pas encore de compte ?
+        <a href="{{ url_for('auth.register') }}" class="text-info text-decoration-none">S’inscrire</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

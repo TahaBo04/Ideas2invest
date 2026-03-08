@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Idées disponibles · ideas2invest{% endblock %}
+{% block header_title %}Parcourir les idées{% endblock %}
+{% block header_subtitle %}Une sélection d’innovations protégées, prêtes à rencontrer des investisseurs.{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  {% for idea in ideas %}
+    <div class="col-md-6 col-xl-4">
+      <div class="card card-glass h-100 p-3 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-info text-dark badge-role">{{ idea.sector or "Innovation" }}</span>
+          {% if idea.stage %}
+            <span class="badge bg-secondary">{{ idea.stage }}</span>
+          {% endif %}
+        </div>
+        <h3 class="h5 text-light">{{ idea.title }}</h3>
+        <p class="text-secondary small mb-3">
+          {{ idea.teaser|default("Pitch confidentiel disponible après NDA.")|truncate(120) }}
+        </p>
+        <div class="mt-auto d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('ideas.idea_public', idea_id=idea.id) }}" class="btn btn-outline-info btn-sm">
+            Voir l’idée
+          </a>
+          <small class="text-muted">
+            Pays : {{ idea.country or "N/A" }}
+          </small>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-secondary">Aucune idée pour le moment.</p>
+  {% endfor %}
+</div>
+{% endblock %}

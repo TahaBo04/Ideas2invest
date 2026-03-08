@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Inscription · ideas2invest{% endblock %}
+{% block header_title %}Créer un compte{% endblock %}
+{% block header_subtitle %}Rejoignez l’écosystème sécurisé ideas2invest.{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card card-glass p-4">
+      <h2 class="h4 mb-3 text-info">Informations de compte</h2>
+      <form method="post" enctype="multipart/form-data">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-control" name="first_name" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control" name="last_name" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" name="password" required>
+            <div class="form-text">Au moins 8 caractères, majuscules, chiffres et symbole.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Rôle</label>
+            <select class="form-select" name="role">
+              <option value="innovator">Porteur d’idée</option>
+              <option value="investor">Investisseur</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="text-secondary my-4">
+
+        <h2 class="h5 mb-3 text-info">Vérification d’identité (KYC)</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Type de pièce d’identité</label>
+            <select class="form-select" name="id_type" required>
+              <option value="CIN">CIN / CNI</option>
+              <option value="passport">Passeport</option>
+              <option value="other">Autre</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Numéro de pièce</label>
+            <input type="text" class="form-control" name="id_number" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Scan de la pièce (PDF/JPG/PNG – optionnel pour MVP)</label>
+            <input type="file" class="form-control" name="id_document">
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+          <small class="text-secondary">
+            Vos informations sont stockées de manière sécurisée et ne sont jamais partagées publiquement.
+          </small>
+          <button class="btn btn-info px-4" type="submit">Créer mon compte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

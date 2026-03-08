@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}NDA · {{ idea.title }}{% endblock %}
+
+{% block content %}
+<div class="section" style="max-width:900px; margin:auto;">
+  <h2>NDA — Accord de confidentialité</h2>
+  <p>Pour accéder au contenu confidentiel de <strong>{{ idea.title }}</strong>, vous devez accepter le NDA.</p>
+
+  <div class="nda-box">
+    <p><strong>Résumé:</strong> Vous vous engagez à ne pas divulguer, copier, réutiliser ou transmettre
+      les informations confidentielles. Toute violation peut entraîner des actions civiles.
+      Les accès sont horodatés et loggés.</p>
+  </div>
+
+  <form method="POST" style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="button" type="submit">J’accepte le NDA</button>
+    <a class="button secondary" href="{{ url_for('ideas.idea_public', idea_id=idea.id) }}">Annuler</a>
+  </form>
+</div>
+{% endblock %}
