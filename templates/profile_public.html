@@ -37,7 +37,11 @@
 
       <div class="mb-3">
         <h3 class="h6 text-muted">Email</h3>
-        <p>{{ profile_user.email }}</p>
+        {% if current_user.is_authenticated and current_user.id == profile_user.id %}
+          <p>{{ profile_user.email }}</p>
+        {% else %}
+          <p class="text-muted fst-italic">Visible uniquement par le propriétaire du profil.</p>
+        {% endif %}
       </div>
 
       <div class="mb-3">

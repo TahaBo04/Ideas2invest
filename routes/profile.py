@@ -1,5 +1,6 @@
 # routes/profile.py
 import os
+import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -14,6 +15,15 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
 def _allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def _remove_old_picture(filename: str | None) -> None:
+    if not filename:
+        return
+    upload_dir = os.path.join(current_app.root_path, "static", "uploads", "profile_pics")
+    old_path = os.path.join(upload_dir, filename)
+    if os.path.isfile(old_path):
+        os.remove(old_path)
 
 
 @profile_bp.route("/<int:user_id>")
@@ -33,9 +43,11 @@ def edit_profile():
         # Handle profile picture upload
         pic = request.files.get("profile_picture")
         if pic and pic.filename and _allowed_file(pic.filename):
-            filename = secure_filename(f"user_{current_user.id}_{pic.filename}")
+            ext = secure_filename(pic.filename).rsplit(".", 1)[1].lower()
+            filename = f"{uuid.uuid4().hex}.{ext}"
             upload_dir = os.path.join(current_app.root_path, "static", "uploads", "profile_pics")
             os.makedirs(upload_dir, exist_ok=True)
+            _remove_old_picture(current_user.profile_picture)
             pic.save(os.path.join(upload_dir, filename))
             current_user.profile_picture = filename
 
