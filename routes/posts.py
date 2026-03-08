@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from app import db
+from extensions import db
 from models.post import Post
 
 posts_bp = Blueprint("posts", __name__, url_prefix="/posts")

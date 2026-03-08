@@ -1,7 +1,8 @@
 # models/user.py
 from datetime import datetime
 from flask_login import UserMixin
-from app import db
+from extensions import db
+
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -19,6 +20,14 @@ class User(db.Model, UserMixin):
     id_number = db.Column(db.String(50))
     id_document_path = db.Column(db.String(255))
     kyc_verified = db.Column(db.Boolean, default=False)
+
+    # KYC verification workflow
+    verification_status = db.Column(db.String(20), default="pending")
+    verification_notes = db.Column(db.Text)
+
+    # Public profile fields
+    profile_picture = db.Column(db.String(255))
+    bio = db.Column(db.Text)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 

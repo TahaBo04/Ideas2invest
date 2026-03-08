@@ -1,7 +1,7 @@
 # routes/admin.py
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from app import db
+from extensions import db
 from models.user import User
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
