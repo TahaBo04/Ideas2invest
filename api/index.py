@@ -1,5 +1,6 @@
 import sys
 import os
+import logging
 
 # Ensure the project root is on the Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,4 +14,4 @@ with app.app_context():
     try:
         db.create_all()
     except Exception:
-        pass
+        logging.exception("db.create_all() failed during startup")
