@@ -1,4 +1,6 @@
 # services/kyc_service.py
+from __future__ import annotations
+
 """
 KYC (Know Your Customer) utilities for ideas2invest.
 
