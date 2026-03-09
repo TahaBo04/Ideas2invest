@@ -1,4 +1,6 @@
 # services/logging_service.py
+from __future__ import annotations
+
 from datetime import datetime
 from flask import request
 from extensions import db
