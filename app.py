@@ -1,7 +1,9 @@
 # app.py
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
+from flask_login import current_user
 from config import Config
 from extensions import db, login_manager
+from urllib.parse import unquote
 
 
 def create_app(config_class=Config):
@@ -42,6 +44,20 @@ def create_app(config_class=Config):
     @app.route("/")
     def home():
         return render_template("base.html")
+
+    @app.route("/urls")
+    def url_list():
+        if not current_user.is_authenticated or current_user.role != "admin":
+            abort(403)
+        routes = []
+        for rule in sorted(app.url_map.iter_rules(), key=lambda r: r.rule):
+            methods = sorted(m for m in rule.methods if m not in ("HEAD", "OPTIONS"))
+            routes.append({
+                "url": unquote(rule.rule),
+                "methods": methods,
+                "endpoint": rule.endpoint,
+            })
+        return render_template("urls.html", routes=routes)
 
     return app
 
