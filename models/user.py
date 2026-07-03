@@ -18,8 +18,12 @@ class User(db.Model, UserMixin):
     id_type = db.Column(db.String(30))
     id_number = db.Column(db.String(50))
     id_document_path = db.Column(db.String(255))
+    company_name = db.Column(db.String(120))
+    company_website = db.Column(db.String(255))
+    social_profile_url = db.Column(db.String(255))
     verification_status = db.Column(db.String(20), default="pending")
     verification_notes = db.Column(db.Text)
+    verification_submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     profile_picture = db.Column(db.String(255))
     bio = db.Column(db.Text)

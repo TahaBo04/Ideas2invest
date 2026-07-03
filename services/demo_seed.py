@@ -24,6 +24,7 @@ def _user(email: str, first_name: str, last_name: str, role: str) -> User:
         id_type="passport",
         id_number=f"DEMO-{role}-{first_name}".upper(),
         verification_status="verified",
+        verification_submitted_at=None,
         bio="Demo account for the local Collabry marketplace.",
     )
     db.session.add(user)
@@ -40,6 +41,13 @@ def seed_demo_data() -> None:
     creator_a = _user("lina@collabry.local", "Lina", "Reels", "influencer")
     creator_b = _user("samir@collabry.local", "Samir", "Fit", "influencer")
     creator_c = _user("nora@collabry.local", "Nora", "Style", "influencer")
+
+    brand.company_name = "Viral Talent Demo Brand"
+    brand.company_website = "https://viraltalent.co/"
+    brand.id_type = "business_registration"
+    creator_a.social_profile_url = "https://instagram.com/lina.reels"
+    creator_b.social_profile_url = "https://instagram.com/samir.fit"
+    creator_c.social_profile_url = "https://tiktok.com/@norastylelab"
 
     profiles = [
         CreatorProfile(

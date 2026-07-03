@@ -17,7 +17,9 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Proof context</th>
             <th>Document</th>
+            <th>Proof file</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -27,10 +29,28 @@
               <td>{{ u.display_name }}</td>
               <td>{{ u.email }}</td>
               <td><span class="tag">{{ u.role }}</span></td>
+              <td>
+                {% if u.role == 'business' %}
+                  <strong>{{ u.company_name or 'Company name missing' }}</strong>
+                  {% if u.company_website %}
+                    <small class="table-note"><a href="{{ u.company_website }}" target="_blank" rel="noopener noreferrer">{{ u.company_website }}</a></small>
+                  {% endif %}
+                {% elif u.role == 'influencer' %}
+                  <strong>Creator social profile</strong>
+                  <small class="table-note"><a href="{{ u.social_profile_url }}" target="_blank" rel="noopener noreferrer">{{ u.social_profile_url or 'Missing profile URL' }}</a></small>
+                {% endif %}
+              </td>
               <td>{{ u.id_type }} · {{ u.id_number }}</td>
               <td>
+                {% if u.id_document_path %}
+                  <a class="button-small ghost" href="{{ url_for('admin.verification_proof', user_id=u.id) }}" target="_blank" rel="noopener noreferrer">View proof</a>
+                {% else %}
+                  <span class="text-muted">No proof uploaded</span>
+                {% endif %}
+              </td>
+              <td>
                 <form method="post" action="{{ url_for('admin.verification_validate', user_id=u.id) }}" class="inline-actions">
-                  <input type="hidden" name="notes" value="">
+                  <input type="text" name="notes" placeholder="Review note">
                   <button name="status" value="verified" class="button-small" type="submit">Approve</button>
                   <button name="status" value="rejected" class="button-small ghost" type="submit">Reject</button>
                 </form>

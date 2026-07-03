@@ -41,8 +41,23 @@ def create_app(config_class=Config):
         from models.campaign import Campaign
         from models.creator import CreatorProfile
 
-        creators = CreatorProfile.query.order_by(CreatorProfile.followers.desc()).limit(3).all()
-        campaigns = Campaign.query.filter_by(status="open").order_by(Campaign.created_at.desc()).limit(3).all()
+        from models.user import User
+
+        creators = (
+            CreatorProfile.query.join(CreatorProfile.user)
+            .filter(User.verification_status == "verified")
+            .order_by(CreatorProfile.followers.desc())
+            .limit(3)
+            .all()
+        )
+        campaigns = (
+            Campaign.query.join(Campaign.business)
+            .filter(Campaign.status == "open")
+            .filter(User.verification_status == "verified")
+            .order_by(Campaign.created_at.desc())
+            .limit(3)
+            .all()
+        )
         return render_template("home.html", creators=creators, campaigns=campaigns)
 
     return app
@@ -54,6 +69,9 @@ if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         db.create_all()
+        from services.schema_service import ensure_runtime_schema
+
+        ensure_runtime_schema()
         if os.environ.get("COLLABRY_DEMO") == "1":
             from services.demo_seed import seed_demo_data
 

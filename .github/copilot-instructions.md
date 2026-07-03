@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Collabry is a Viral Talent Flask marketplace connecting influencers with businesses looking for creator-led ad campaigns. The app supports creator media kits, business campaign briefs, deterministic match scoring, collaboration requests, protected media-kit access, and admin verification.
+Collabry is a Viral Talent Flask marketplace connecting influencers with businesses looking for creator-led ad campaigns. The app supports creator media kits, business campaign briefs, deterministic match scoring, collaboration requests, protected media-kit access, and proof-based admin verification.
 
 ## Tech Stack
 
@@ -31,6 +31,9 @@ Collabry is a Viral Talent Flask marketplace connecting influencers with busines
 - Campaign brief data belongs in `Campaign`.
 - Business invites and influencer applications belong in `CollaborationRequest`.
 - Protected creator access requires `CollaborationAgreement`.
+- Pending businesses cannot post campaigns, invite creators, or unlock protected creator details.
+- Pending creators should not appear in discovery and cannot apply to campaigns.
+- Verification proof files must stay private and be served only through admin-only routes.
 - Smart matching should remain deterministic unless the product explicitly adds a live AI provider.
 
 ## Local Run

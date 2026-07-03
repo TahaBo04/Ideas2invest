@@ -11,7 +11,7 @@ Collabry is a Flask marketplace for campaign discovery, creator media kits, smar
 - Deterministic smart match scoring with no external AI/API key.
 - Collaboration requests for both business invites and influencer applications.
 - Collaboration agreement gate before businesses can view protected creator details.
-- Admin verification queue for marketplace trust.
+- Admin verification queue with private proof-document review for marketplace trust.
 - Guarded local demo seeding with sample creators, campaigns, and accounts.
 
 ## Tech Stack
@@ -61,3 +61,5 @@ Useful demo emails:
 - `COLLABRY_DEMO=1` is required for demo seeding. Production does not seed automatically.
 - Local SQLite uses `collabry.db`, which is ignored by git.
 - User uploads in `static/uploads/profile_pics/` are ignored except `.gitkeep`.
+- Verification proof uploads are stored privately under `instance/verification_docs` locally and can only be opened through the admin review route.
+- Businesses must submit legal company proof; creators must submit identity proof plus a public social profile before Viral Talent can approve them.

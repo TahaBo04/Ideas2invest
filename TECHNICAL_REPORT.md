@@ -2,7 +2,7 @@
 
 ## Overview
 
-Collabry is a Flask marketplace owned by Viral Talent. It connects verified influencers and businesses through creator media kits, campaign briefs, deterministic match scoring, and collaboration requests.
+Collabry is a Flask marketplace owned by Viral Talent. It connects verified influencers and businesses through creator media kits, campaign briefs, deterministic match scoring, collaboration requests, and proof-based account verification.
 
 ## Architecture
 
@@ -27,12 +27,22 @@ Collabry is a Flask marketplace owned by Viral Talent. It connects verified infl
 
 ## Main Workflows
 
-1. Influencer registers, verifies, and creates a creator media kit at `/creators/onboarding`.
-2. Business registers, verifies, and posts a campaign at `/campaigns/new`.
+1. Influencer registers with identity proof and a public social profile, then creates a creator media kit at `/creators/onboarding`.
+2. Business registers with company proof, then posts a campaign at `/campaigns/new` after admin approval.
 3. Collabry scores creator/campaign fit by niche, platform overlap, country match, budget compatibility, engagement, and follower signals.
 4. Influencer applies to a campaign through `/campaigns/<id>/apply`.
 5. Business invites creators from `/creators/<id>/invite`.
 6. Verified businesses accept `/creators/<id>/agreement` before viewing `/creators/<id>/media-kit`.
+
+## Verification
+
+- Registration requires a proof upload for both roles.
+- Creator accounts submit legal ID proof and a public social profile URL.
+- Business accounts submit company name plus registration, tax, or equivalent company proof.
+- Proof files are stored outside public static paths under `instance/verification_docs` locally.
+- Admins review pending users at `/admin/verification` and open proof files through an admin-only route.
+- Pending businesses cannot post campaigns, invite creators, or unlock protected media-kit details.
+- Pending creators do not appear in discovery and cannot apply to campaigns.
 
 ## Local Development
 

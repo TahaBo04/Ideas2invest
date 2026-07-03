@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 from models.user import User
 from services.logging_service import log_login
+from services.verification_service import allowed_verification_file, save_verification_document
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -22,6 +23,10 @@ def register():
 
         id_type = request.form.get("id_type", "").strip()
         id_number = request.form.get("id_number", "").strip()
+        company_name = request.form.get("company_name", "").strip()
+        company_website = request.form.get("company_website", "").strip()
+        social_profile_url = request.form.get("social_profile_url", "").strip()
+        verification_document = request.files.get("verification_document")
 
         if not email or not password or not first_name or not last_name:
             flash("Please complete all required fields.", "danger")
@@ -31,9 +36,31 @@ def register():
             flash("Choose whether you are joining as an influencer or a business.", "danger")
             return redirect(url_for("auth.register"))
 
+        if not id_type or not id_number:
+            flash("A legal document type and document number are required for verification.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if role == "business" and not company_name:
+            flash("Businesses must provide a legal company name.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if role == "influencer" and not social_profile_url:
+            flash("Creators must provide a public social profile for identity matching.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if not verification_document or not verification_document.filename:
+            flash("Upload identity proof before creating the account.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if not allowed_verification_file(verification_document.filename):
+            flash("Verification proof must be a PDF, PNG, JPG, JPEG, or WebP file.", "danger")
+            return redirect(url_for("auth.register"))
+
         if User.query.filter_by(email=email).first():
             flash("This email is already in use.", "danger")
             return redirect(url_for("auth.register"))
+
+        proof_filename = save_verification_document(verification_document, role)
 
         user = User(
             email=email,
@@ -43,6 +70,12 @@ def register():
             last_name=last_name,
             id_type=id_type,
             id_number=id_number,
+            id_document_path=proof_filename,
+            company_name=company_name if role == "business" else None,
+            company_website=company_website if role == "business" else None,
+            social_profile_url=social_profile_url if role == "influencer" else None,
+            verification_status="pending",
+            verification_submitted_at=datetime.utcnow(),
         )
 
         db.session.add(user)

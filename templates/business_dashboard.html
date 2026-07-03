@@ -4,6 +4,13 @@
 {% block header_subtitle %}Manage campaign briefs, creator invites, and inbound applications in one performance-focused workspace.{% endblock %}
 
 {% block content %}
+{% if not current_user.is_verified %}
+  <section class="section-card verification-warning">
+    <strong>Company verification pending.</strong>
+    <p>Viral Talent needs to approve your company proof before you can post campaigns, invite creators, or unlock protected media-kit details.</p>
+  </section>
+{% endif %}
+
 <section class="dashboard-grid">
   <div class="section-card">
     <div class="section-heading row-heading">

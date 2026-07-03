@@ -5,7 +5,7 @@
 
 {% block content %}
 <section class="form-shell">
-  <form method="post" class="form-card">
+  <form method="post" enctype="multipart/form-data" class="form-card">
     <div class="two-col">
       <label>First name
         <input type="text" name="first_name" required>
@@ -25,18 +25,31 @@
           <option value="business">Business</option>
         </select>
       </label>
+      <label>Company legal name
+        <input type="text" name="company_name" placeholder="Required for business accounts">
+      </label>
+      <label>Company website
+        <input type="url" name="company_website" placeholder="https://yourcompany.com">
+      </label>
+      <label>Creator public profile
+        <input type="url" name="social_profile_url" placeholder="Required for creators: Instagram, TikTok, YouTube...">
+      </label>
       <label>Document type
         <select name="id_type" required>
           <option value="passport">Passport</option>
           <option value="CIN">CIN / CNI</option>
           <option value="business_registration">Business registration</option>
+          <option value="tax_certificate">Tax certificate</option>
         </select>
       </label>
-      <label class="span-2">Document number
+      <label>Document number
         <input type="text" name="id_number" required>
       </label>
+      <label class="span-2">Identity or company proof
+        <input type="file" name="verification_document" accept=".pdf,.png,.jpg,.jpeg,.webp" required>
+      </label>
     </div>
-    <p class="form-note">Verification keeps the marketplace useful for serious creators and serious brands.</p>
+    <p class="form-note">Businesses must upload company registration, tax proof, or equivalent legal evidence. Creators must upload government ID or a comparable identity proof so Viral Talent can confirm the person behind the account.</p>
     <button class="button-primary" type="submit">Create account</button>
   </form>
 </section>

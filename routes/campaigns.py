@@ -8,15 +8,22 @@ from extensions import db
 from models.campaign import Campaign
 from models.collaboration import CollaborationRequest
 from models.creator import CreatorProfile
+from models.user import User
 from services.matching_service import calculate_match_score, score_creators_for_campaign
-from services.security_service import is_business, is_influencer
+from services.security_service import is_business, is_influencer, is_verified_user
 
 campaigns_bp = Blueprint("campaigns", __name__, url_prefix="/campaigns")
 
 
 @campaigns_bp.route("/")
 def list_campaigns():
-    campaigns = Campaign.query.filter_by(status="open").order_by(Campaign.created_at.desc()).all()
+    campaigns = (
+        Campaign.query.join(Campaign.business)
+        .filter(Campaign.status == "open")
+        .filter(User.verification_status == "verified")
+        .order_by(Campaign.created_at.desc())
+        .all()
+    )
     profile = current_user.creator_profile if current_user.is_authenticated and current_user.role == "influencer" else None
     scores = {}
     if profile:
@@ -30,6 +37,10 @@ def new_campaign():
     if not is_business():
         flash("Only business accounts can post campaign briefs.", "danger")
         return redirect(url_for("campaigns.list_campaigns"))
+
+    if not is_verified_user():
+        flash("Your company proof must be approved before posting campaign briefs.", "warning")
+        return redirect(url_for("business.dashboard"))
 
     if request.method == "POST":
         campaign = Campaign(
@@ -91,6 +102,10 @@ def apply(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
     if not is_influencer():
         flash("Only influencers can apply to campaigns.", "danger")
+        return redirect(url_for("campaigns.campaign_detail", campaign_id=campaign.id))
+
+    if not is_verified_user():
+        flash("Your creator identity proof must be approved before applying to campaigns.", "warning")
         return redirect(url_for("campaigns.campaign_detail", campaign_id=campaign.id))
 
     profile = current_user.creator_profile

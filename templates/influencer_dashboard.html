@@ -4,6 +4,13 @@
 {% block header_subtitle %}Keep your media-kit profile sharp and track every campaign application or business invite.{% endblock %}
 
 {% block content %}
+{% if not current_user.is_verified %}
+  <section class="section-card verification-warning">
+    <strong>Creator verification pending.</strong>
+    <p>Viral Talent needs to approve your identity proof before your profile appears in discovery or you can apply to campaigns.</p>
+  </section>
+{% endif %}
+
 <section class="dashboard-grid">
   <div class="section-card">
     <div class="section-heading row-heading">

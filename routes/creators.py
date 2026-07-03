@@ -8,10 +8,11 @@ from extensions import db
 from models.campaign import Campaign
 from models.collaboration import CollaborationRequest
 from models.creator import CreatorProfile
+from models.user import User
 from services.collaboration_service import accept_collaboration_agreement, has_collaboration_agreement
 from services.logging_service import log_audit_event, log_creator_view
 from services.matching_service import calculate_match_score
-from services.security_service import can_view_protected_creator_details, is_business, is_influencer
+from services.security_service import can_view_protected_creator_details, is_business, is_influencer, is_verified_user
 
 creators_bp = Blueprint("creators", __name__, url_prefix="/creators")
 
@@ -22,7 +23,7 @@ def list_creators():
     platform = request.args.get("platform", "").strip()
     country = request.args.get("country", "").strip()
 
-    query = CreatorProfile.query
+    query = CreatorProfile.query.join(CreatorProfile.user).filter(User.verification_status == "verified")
     if niche:
         query = query.filter(CreatorProfile.niche.ilike(f"%{niche}%"))
     if platform:
@@ -147,6 +148,10 @@ def invite_creator(creator_id):
     creator = CreatorProfile.query.get_or_404(creator_id)
     if not is_business():
         flash("Only business accounts can invite creators.", "danger")
+        return redirect(url_for("creators.creator_detail", creator_id=creator.id))
+
+    if not is_verified_user():
+        flash("Your company proof must be approved before inviting creators.", "warning")
         return redirect(url_for("creators.creator_detail", creator_id=creator.id))
 
     campaign_id = request.form.get("campaign_id", type=int)
