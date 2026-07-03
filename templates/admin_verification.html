@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Verification · Collabry Admin{% endblock %}
+{% block header_title %}Verification queue{% endblock %}
+{% block header_subtitle %}Approve serious influencers and businesses before they unlock protected marketplace actions.{% endblock %}
+
+{% block content %}
+<section class="section-card">
+  <div class="section-heading">
+    <p class="eyebrow">Admin</p>
+    <h2>Pending accounts</h2>
+  </div>
+  {% if users %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Document</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr>
+              <td>{{ u.display_name }}</td>
+              <td>{{ u.email }}</td>
+              <td><span class="tag">{{ u.role }}</span></td>
+              <td>{{ u.id_type }} · {{ u.id_number }}</td>
+              <td>
+                <form method="post" action="{{ url_for('admin.verification_validate', user_id=u.id) }}" class="inline-actions">
+                  <input type="hidden" name="notes" value="">
+                  <button name="status" value="verified" class="button-small" type="submit">Approve</button>
+                  <button name="status" value="rejected" class="button-small ghost" type="submit">Reject</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">No pending accounts.</div>
+  {% endif %}
+</section>
+{% endblock %}

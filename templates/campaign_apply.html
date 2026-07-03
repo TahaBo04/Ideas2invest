@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Apply · {{ campaign.title }}{% endblock %}
+{% block header_title %}Apply to this campaign{% endblock %}
+{% block header_subtitle %}Your current media kit scores {{ score }}% for this brief. Use your message to explain the creative angle you would bring.{% endblock %}
+
+{% block content %}
+<section class="form-shell narrow">
+  <form method="post" class="form-card">
+    <div class="match-banner">
+      <span class="score">{{ score }}%</span>
+      <span>{{ profile.display_name }} matched against {{ campaign.title }}</span>
+    </div>
+    <label>Application message
+      <textarea name="message" rows="6" required placeholder="Pitch a concise creator concept: hook, content format, expected audience fit, and timeline."></textarea>
+    </label>
+    <button class="button-primary" type="submit">Send application</button>
+  </form>
+</section>
+{% endblock %}

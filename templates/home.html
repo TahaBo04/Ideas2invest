@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Collabry · Viral Talent marketplace{% endblock %}
+{% block header_title %}The creator marketplace for ads that feel human and perform.{% endblock %}
+{% block header_subtitle %}Businesses post sharp campaign briefs. Influencers build media-kit profiles. Collabry scores the best fits so Viral Talent can turn discovery into real campaign momentum.{% endblock %}
+{% block hero_aside %}
+  <div class="hero-visual">
+    <img src="{{ url_for('static', filename='uploads/viral-talent-logo.png') }}" alt="Viral Talent brand asset">
+    <div>
+      <span class="metric-pill">Viral Talent product</span>
+      <strong>Built for creator-led performance marketing.</strong>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<section class="action-grid">
+  <a class="action-card" href="{{ url_for('creators.list_creators') }}">
+    <span>For businesses</span>
+    <strong>Find creators</strong>
+    <p>Filter by niche, platform, audience country, rate, and match score.</p>
+  </a>
+  <a class="action-card accent" href="{{ url_for('campaigns.list_campaigns') }}">
+    <span>For influencers</span>
+    <strong>Browse campaigns</strong>
+    <p>See brand briefs and apply when your audience fits the goal.</p>
+  </a>
+  <a class="action-card lime" href="{{ url_for('auth.register') }}">
+    <span>Get started</span>
+    <strong>Join Collabry</strong>
+    <p>Create a verified account and enter the marketplace workflow.</p>
+  </a>
+</section>
+
+<section class="split-section">
+  <div>
+    <div class="section-heading">
+      <p class="eyebrow">Featured creators</p>
+      <h2>Talent ready for brand briefs</h2>
+    </div>
+    <div class="stack-list">
+      {% for creator in creators %}
+        <a class="list-card" href="{{ url_for('creators.creator_detail', creator_id=creator.id) }}">
+          <span class="avatar">{{ creator.display_name[:1] }}</span>
+          <span>
+            <strong>{{ creator.display_name }}</strong>
+            <small>{{ creator.niche }} · {{ creator.platforms }} · {{ "{:,}".format(creator.followers) }} followers</small>
+          </span>
+        </a>
+      {% else %}
+        <div class="empty-state">Run with <code>COLLABRY_DEMO=1</code> to populate sample creators.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div>
+    <div class="section-heading">
+      <p class="eyebrow">Open campaigns</p>
+      <h2>Briefs creators can act on</h2>
+    </div>
+    <div class="stack-list">
+      {% for campaign in campaigns %}
+        <a class="list-card" href="{{ url_for('campaigns.campaign_detail', campaign_id=campaign.id) }}">
+          <span class="campaign-dot"></span>
+          <span>
+            <strong>{{ campaign.title }}</strong>
+            <small>{{ campaign.target_niche }} · {{ campaign.target_platforms }} · ${{ campaign.budget_min }}-${{ campaign.budget_max }}</small>
+          </span>
+        </a>
+      {% else %}
+        <div class="empty-state">No live campaigns yet. Businesses can post the first brief.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

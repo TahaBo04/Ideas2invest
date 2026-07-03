@@ -2,12 +2,7 @@
 from __future__ import annotations
 
 """
-KYC (Know Your Customer) utilities for ideas2invest.
-
-Here we manage:
-- Submitting identity info
-- Marking users as verified / rejected
-- Simple local validation of ID formats
+Identity verification helpers for Collabry.
 """
 
 from extensions import db
@@ -28,32 +23,25 @@ def submit_kyc(user: User, id_type: str, id_number: str, id_document_path: str |
 
 
 def validate_id_format(id_type: str, id_number: str) -> tuple[bool, str | None]:
-    """
-    Very simple local checks to avoid obvious fake IDs.
-    You can later extend this or integrate with a real KYC API.
-    """
     id_number = (id_number or "").strip().upper()
 
     if not id_number:
-        return False, "Le numéro de pièce d'identité ne peut pas être vide."
+        return False, "The identity document number is required."
 
-    # Simple example for Moroccan CIN (often 1–2 letters + up to 6 digits)
     if id_type.upper() in ("CIN", "CNI"):
         if len(id_number) < 5 or len(id_number) > 10:
-            return False, "Format CIN suspect (longueur invalide)."
+            return False, "The CIN/CNI number length looks invalid."
         if not any(c.isalpha() for c in id_number) or not any(c.isdigit() for c in id_number):
-            return False, "Le CIN doit contenir au moins une lettre et des chiffres."
+            return False, "The CIN/CNI number should include letters and digits."
 
-    # Simple passport check: length + alphanumeric
     if id_type.lower() == "passport":
         if len(id_number) < 6:
-            return False, "Numéro de passeport trop court."
+            return False, "The passport number is too short."
         if not id_number.isalnum():
-            return False, "Numéro de passeport invalide (caractères non autorisés)."
+            return False, "The passport number should be alphanumeric."
 
-    # Default: minimal check
     if len(id_number) < 4:
-        return False, "Numéro de pièce trop court."
+        return False, "The identity document number is too short."
 
     return True, None
 

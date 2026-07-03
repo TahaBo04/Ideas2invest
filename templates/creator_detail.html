@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ creator.display_name }} · Collabry{% endblock %}
+{% block header_title %}{{ creator.display_name }}{% endblock %}
+{% block header_subtitle %}{{ creator.niche }} creator on {{ creator.platforms }} with a {{ creator.audience_country }} audience.{% endblock %}
+
+{% block content %}
+<section class="detail-grid">
+  <article class="section-card">
+    <div class="profile-head">
+      <span class="avatar large">{{ creator.display_name[:1] }}</span>
+      <div>
+        <p class="eyebrow">Creator media kit</p>
+        <h2>{{ creator.display_name }}</h2>
+        <div class="tag-row">
+          <span class="tag">{{ creator.niche }}</span>
+          <span class="tag">{{ creator.audience_country }}</span>
+          <span class="tag">${{ creator.starting_rate }} starting rate</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="lead-text">{{ creator.media_kit_summary }}</p>
+    <div class="stat-row">
+      <span>{{ "{:,}".format(creator.followers) }} followers</span>
+      <span>{{ creator.engagement_rate }}% engagement</span>
+      <span>{{ creator.platforms }}</span>
+    </div>
+  </article>
+
+  <aside class="section-card">
+    <div class="section-heading">
+      <p class="eyebrow">Protected details</p>
+      <h2>Collaboration access</h2>
+    </div>
+    {% if current_user.is_authenticated and current_user.role == 'business' %}
+      {% if can_view_protected %}
+        <p>You have accepted the collaboration agreement for this creator.</p>
+        <a class="button-primary stretch" href="{{ url_for('creators.media_kit', creator_id=creator.id) }}">Open protected media kit</a>
+      {% else %}
+        <p>Accept the collaboration agreement to unlock contact details, package notes, and performance terms.</p>
+        <a class="button-primary stretch" href="{{ url_for('creators.agreement', creator_id=creator.id) }}">Unlock with agreement</a>
+      {% endif %}
+    {% elif current_user.is_authenticated and current_user.id == creator.user_id %}
+      <p>This is your public creator profile.</p>
+      <a class="button-primary stretch" href="{{ url_for('creators.onboarding') }}">Edit profile</a>
+    {% else %}
+      <p>Businesses can sign in to invite this creator or unlock protected details.</p>
+      <a class="button-primary stretch" href="{{ url_for('auth.login') }}">Business log in</a>
+    {% endif %}
+  </aside>
+</section>
+
+{% if current_user.is_authenticated and current_user.role == 'business' and campaigns %}
+<section class="section-card">
+  <div class="section-heading">
+    <p class="eyebrow">Invite workflow</p>
+    <h2>Invite {{ creator.display_name }} to a campaign</h2>
+  </div>
+  <form method="post" action="{{ url_for('creators.invite_creator', creator_id=creator.id) }}" class="form-card inline-form">
+    <label>Campaign
+      <select name="campaign_id" required>
+        {% for campaign in campaigns %}
+          <option value="{{ campaign.id }}">{{ campaign.title }}{% if scores.get(campaign.id) is not none %} · {{ scores[campaign.id] }}% match{% endif %}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Message
+      <textarea name="message" rows="3" placeholder="Tell the creator why their audience fits the campaign."></textarea>
+    </label>
+    <button class="button-primary" type="submit">Send invite</button>
+  </form>
+</section>
+{% endif %}
+{% endblock %}

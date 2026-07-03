@@ -1,4 +1,3 @@
-# routes/auth.py
 from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
@@ -16,7 +15,7 @@ def register():
     if request.method == "POST":
         email = request.form["email"].strip().lower()
         password = request.form["password"]
-        role = request.form.get("role", "innovator")
+        role = request.form.get("role", "influencer")
 
         first_name = request.form.get("first_name", "").strip()
         last_name = request.form.get("last_name", "").strip()
@@ -24,18 +23,21 @@ def register():
         id_type = request.form.get("id_type", "").strip()
         id_number = request.form.get("id_number", "").strip()
 
-        # Basic validation
         if not email or not password or not first_name or not last_name:
-            flash("Veuillez remplir tous les champs obligatoires.", "danger")
+            flash("Please complete all required fields.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if role not in ("influencer", "business"):
+            flash("Choose whether you are joining as an influencer or a business.", "danger")
             return redirect(url_for("auth.register"))
 
         if User.query.filter_by(email=email).first():
-            flash("Cet email est déjà utilisé.", "danger")
+            flash("This email is already in use.", "danger")
             return redirect(url_for("auth.register"))
 
         user = User(
             email=email,
-            password_hash=generate_password_hash(password),  # ✅ Option A fix
+            password_hash=generate_password_hash(password),
             role=role,
             first_name=first_name,
             last_name=last_name,
@@ -43,15 +45,10 @@ def register():
             id_number=id_number,
         )
 
-        # If your model has kyc_verified, keep it pending by default
-        # (No need to set unless you want explicit)
-        if hasattr(user, "kyc_verified") and user.kyc_verified is None:
-            user.kyc_verified = False
-
         db.session.add(user)
         db.session.commit()
 
-        flash("Compte créé. En attente de vérification.", "success")
+        flash("Account created. Your profile is pending verification.", "success")
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
@@ -65,11 +62,10 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        # ✅ Option A fix: check_password_hash against password_hash
         if not user or not check_password_hash(user.password_hash, password):
             if user:
                 log_login(user, success=False, failure_reason="wrong_password")
-            flash("Identifiants invalides.", "danger")
+            flash("Invalid email or password.", "danger")
             return redirect(url_for("auth.login"))
 
         login_user(user)
@@ -81,7 +77,11 @@ def login():
 
         log_login(user, success=True)
 
-        return redirect(url_for("home"))
+        if user.role == "business":
+            return redirect(url_for("business.dashboard"))
+        if user.role == "admin":
+            return redirect(url_for("admin.verification_dashboard"))
+        return redirect(url_for("influencer.dashboard"))
 
     return render_template("login.html")
 

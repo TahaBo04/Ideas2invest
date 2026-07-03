@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Creators · Collabry{% endblock %}
+{% block header_title %}Browse performance-ready creators.{% endblock %}
+{% block header_subtitle %}Filter the marketplace and compare creators by niche, platform, country, rates, and match score.{% endblock %}
+
+{% block content %}
+<section class="filter-bar">
+  <form method="get" class="filter-form">
+    <input name="niche" placeholder="Niche, e.g. beauty" value="{{ request.args.get('niche', '') }}">
+    <input name="platform" placeholder="Platform, e.g. TikTok" value="{{ request.args.get('platform', '') }}">
+    <input name="country" placeholder="Audience country" value="{{ request.args.get('country', '') }}">
+    <button class="button-primary compact" type="submit">Filter</button>
+  </form>
+  {% if campaign %}
+    <span class="context-chip">Scored for: {{ campaign.title }}</span>
+  {% endif %}
+</section>
+
+<section class="card-grid">
+  {% for creator in creators %}
+    <article class="market-card">
+      <div class="card-topline">
+        <span class="avatar">{{ creator.display_name[:1] }}</span>
+        {% if scores.get(creator.id) is not none %}
+          <span class="score">{{ scores[creator.id] }}%</span>
+        {% endif %}
+      </div>
+      <h2>{{ creator.display_name }}</h2>
+      <p>{{ creator.media_kit_summary|truncate(150) }}</p>
+      <div class="tag-row">
+        <span class="tag">{{ creator.niche }}</span>
+        <span class="tag">{{ creator.audience_country }}</span>
+        <span class="tag">${{ creator.starting_rate }}+</span>
+      </div>
+      <div class="card-meta">
+        <span>{{ creator.platforms }}</span>
+        <span>{{ "{:,}".format(creator.followers) }} followers</span>
+        <span>{{ creator.engagement_rate }}% engagement</span>
+      </div>
+      <a class="button-primary stretch" href="{{ url_for('creators.creator_detail', creator_id=creator.id) }}">Open creator</a>
+    </article>
+  {% else %}
+    <div class="empty-state wide">No creators match those filters yet.</div>
+  {% endfor %}
+</section>
+{% endblock %}
