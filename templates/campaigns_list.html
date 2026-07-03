@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Campaigns · Collabry{% endblock %}
+{% block header_title %}Open campaign briefs{% endblock %}
+{% block header_subtitle %}Influencers can browse briefs and apply. Businesses can compare creators against each campaign’s target audience and budget.{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.role == 'business' %}
+  <div class="page-actions">
+    <a class="button-primary" href="{{ url_for('campaigns.new_campaign') }}">Post a campaign brief</a>
+  </div>
+{% endif %}
+
+<section class="card-grid">
+  {% for campaign in campaigns %}
+    <article class="market-card">
+      <div class="card-topline">
+        <span class="campaign-dot"></span>
+        {% if scores.get(campaign.id) is not none %}
+          <span class="score">{{ scores[campaign.id] }}%</span>
+        {% endif %}
+      </div>
+      <h2>{{ campaign.title }}</h2>
+      <p>{{ campaign.brief|truncate(150) }}</p>
+      <div class="tag-row">
+        <span class="tag">{{ campaign.target_niche }}</span>
+        <span class="tag">{{ campaign.target_country }}</span>
+        <span class="tag">${{ campaign.budget_min }}-${{ campaign.budget_max }}</span>
+      </div>
+      <div class="card-meta">
+        <span>{{ campaign.target_platforms }}</span>
+        <span>{{ campaign.goal }}</span>
+      </div>
+      <a class="button-primary stretch" href="{{ url_for('campaigns.campaign_detail', campaign_id=campaign.id) }}">Open brief</a>
+    </article>
+  {% else %}
+    <div class="empty-state wide">No open campaigns yet.</div>
+  {% endfor %}
+</section>
+{% endblock %}

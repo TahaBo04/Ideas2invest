@@ -13,5 +13,8 @@ app = create_app()
 with app.app_context():
     try:
         db.create_all()
+        from services.schema_service import ensure_runtime_schema
+
+        ensure_runtime_schema()
     except Exception:
         logging.exception("db.create_all() failed during startup")

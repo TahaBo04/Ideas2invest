@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Protected media kit · {{ creator.display_name }}{% endblock %}
+{% block header_title %}Protected media kit{% endblock %}
+{% block header_subtitle %}Use these details to prepare a serious, relevant collaboration brief for {{ creator.display_name }}.{% endblock %}
+
+{% block content %}
+<section class="section-card">
+  <div class="profile-head">
+    <span class="avatar large">{{ creator.display_name[:1] }}</span>
+    <div>
+      <p class="eyebrow">Unlocked creator details</p>
+      <h2>{{ creator.display_name }}</h2>
+      <p>{{ creator.media_kit_summary }}</p>
+    </div>
+  </div>
+  <div class="protected-box">
+    {{ creator.protected_details or "The creator has not added protected details yet." }}
+  </div>
+  <a class="button-secondary" href="{{ url_for('creators.creator_detail', creator_id=creator.id) }}">Back to profile</a>
+</section>
+{% endblock %}

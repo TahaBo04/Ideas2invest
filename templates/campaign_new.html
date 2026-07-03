@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Post campaign · Collabry{% endblock %}
+{% block header_title %}Post a campaign brief.{% endblock %}
+{% block header_subtitle %}Write a brief that creators can evaluate quickly: target audience, deliverables, budget, and the business outcome you care about.{% endblock %}
+
+{% block content %}
+<section class="form-shell">
+  <form method="post" class="form-card">
+    <div class="two-col">
+      <label>Campaign title
+        <input name="title" placeholder="Launch our skincare routine with TikTok creators" required>
+      </label>
+      <label>Industry
+        <input name="industry" placeholder="Beauty, SaaS, fitness, food..." required>
+      </label>
+      <label>Target niche
+        <input name="target_niche" placeholder="Beauty" required>
+      </label>
+      <label>Target platforms
+        <input name="target_platforms" placeholder="TikTok, Instagram" required>
+      </label>
+      <label>Target audience country
+        <input name="target_country" placeholder="Morocco" required>
+      </label>
+      <label>Campaign goal
+        <input name="goal" placeholder="Drive creator-led awareness and tracked visits" required>
+      </label>
+      <label>Minimum budget (USD)
+        <input type="number" name="budget_min" min="0" value="500" required>
+      </label>
+      <label>Maximum budget (USD)
+        <input type="number" name="budget_max" min="1" value="1500" required>
+      </label>
+      <label class="span-2">Campaign brief
+        <textarea name="brief" rows="5" required placeholder="Describe the product, audience, creative direction, launch timing, and the story creators should tell."></textarea>
+      </label>
+      <label class="span-2">Deliverables
+        <textarea name="deliverables" rows="4" required placeholder="Example: 2 TikToks, 1 Reel, 3 story frames, raw files, 30-day paid usage rights."></textarea>
+      </label>
+    </div>
+    <button class="button-primary" type="submit">Post campaign</button>
+  </form>
+</section>
+{% endblock %}

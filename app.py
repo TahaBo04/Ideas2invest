@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template
 from config import Config
 from extensions import db, login_manager
@@ -8,15 +7,12 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Init extensions
     db.init_app(app)
     login_manager.init_app(app)
 
-    # Import models so they are registered
     from models.user import User
-    from models import user, idea, nda, logs, post  # noqa: F401
+    from models import campaign, collaboration, creator, logs, user  # noqa: F401
 
-    # --- Flask-Login user loader ---
     @login_manager.user_loader
     def load_user(user_id: str):
         try:
@@ -24,30 +20,60 @@ def create_app(config_class=Config):
         except Exception:
             return None
 
-    # Register blueprints
     from routes.auth import auth_bp
-    from routes.ideas import ideas_bp
-    from routes.investor import investor_bp
+    from routes.creators import creators_bp
+    from routes.campaigns import campaigns_bp
+    from routes.business import business_bp
+    from routes.influencer import influencer_bp
     from routes.admin import admin_bp
-    from routes.posts import posts_bp
     from routes.profile import profile_bp
 
-    app.register_blueprint(posts_bp)
     app.register_blueprint(auth_bp)
-    app.register_blueprint(ideas_bp)
-    app.register_blueprint(investor_bp)
+    app.register_blueprint(creators_bp)
+    app.register_blueprint(campaigns_bp)
+    app.register_blueprint(business_bp)
+    app.register_blueprint(influencer_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(profile_bp)
 
     @app.route("/")
     def home():
-        return render_template("base.html")
+        from models.campaign import Campaign
+        from models.creator import CreatorProfile
+
+        from models.user import User
+
+        creators = (
+            CreatorProfile.query.join(CreatorProfile.user)
+            .filter(User.verification_status == "verified")
+            .order_by(CreatorProfile.followers.desc())
+            .limit(3)
+            .all()
+        )
+        campaigns = (
+            Campaign.query.join(Campaign.business)
+            .filter(Campaign.status == "open")
+            .filter(User.verification_status == "verified")
+            .order_by(Campaign.created_at.desc())
+            .limit(3)
+            .all()
+        )
+        return render_template("home.html", creators=creators, campaigns=campaigns)
 
     return app
 
 
 if __name__ == "__main__":
+    import os
+
     app = create_app()
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+        from services.schema_service import ensure_runtime_schema
+
+        ensure_runtime_schema()
+        if os.environ.get("COLLABRY_DEMO") == "1":
+            from services.demo_seed import seed_demo_data
+
+            seed_demo_data()
+    app.run(debug=True, use_reloader=False)

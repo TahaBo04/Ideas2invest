@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Creator agreement · Collabry{% endblock %}
+{% block header_title %}Collaboration agreement{% endblock %}
+{% block header_subtitle %}Accept these terms before opening protected creator contact and campaign package details.{% endblock %}
+
+{% block content %}
+<section class="section-card narrow-card">
+  <h2>Access terms for {{ creator.display_name }}</h2>
+  <p>By continuing, you agree to use protected creator details only for evaluating or proposing a Collabry campaign. Do not copy, resell, scrape, or share contact details outside your business team.</p>
+  <p>Collabry logs agreement acceptance time, IP address, and browser metadata for marketplace accountability.</p>
+  <form method="post" class="inline-actions">
+    <button class="button-primary" type="submit">Accept and unlock</button>
+    <a class="button-secondary" href="{{ url_for('creators.creator_detail', creator_id=creator.id) }}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

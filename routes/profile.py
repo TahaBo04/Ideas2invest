@@ -1,4 +1,3 @@
-# routes/profile.py
 from __future__ import annotations
 
 import os
@@ -20,8 +19,6 @@ def _allowed_file(filename: str) -> bool:
 
 
 def _get_upload_dir() -> str:
-    """Return a writable upload directory.  On Vercel the project tree is
-    read-only so we fall back to /tmp."""
     if os.environ.get("VERCEL"):
         d = "/tmp/uploads/profile_pics"
     else:
@@ -64,7 +61,7 @@ def edit_profile():
             current_user.profile_picture = filename
 
         db.session.commit()
-        flash("Profil mis à jour avec succès.", "success")
+        flash("Profile updated.", "success")
         return redirect(url_for("profile.public_profile", user_id=current_user.id))
 
     return render_template("profile_edit.html")
